@@ -20,7 +20,7 @@ export default function SignIn() {
 
   const handleSignIn = values => {
     console.log('Handle submit values: ', values);
-    history.push('/home');
+    history.push('/principal');
   };
 
   return (
@@ -82,7 +82,7 @@ export default function SignIn() {
           <Typography variant="subtitle2" color="secondary">
             Esqueceu o seu PIN?
           </Typography>
-          <Button dense variant="text" color="primary">
+          <Button dense smallWidth variant="text" color="primary">
             Solicitar novo PIN
           </Button>
         </Grid>

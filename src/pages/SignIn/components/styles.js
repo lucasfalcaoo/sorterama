@@ -1,4 +1,5 @@
 import { makeStyles } from '@material-ui/core/styles';
+import { MAX_WIDTH } from '../../../theme/globalStyles';
 
 export const useStyles = makeStyles(({ spacing }) => ({
   container: {
@@ -6,6 +7,7 @@ export const useStyles = makeStyles(({ spacing }) => ({
     padding: spacing(1),
     textAlign: 'center',
     backgroundColor: '#FFFFFF',
+    maxWidth: MAX_WIDTH,
   },
   paper: {
     textAlign: 'center',
