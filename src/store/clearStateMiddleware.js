@@ -1,12 +1,12 @@
 import storage from 'redux-persist/lib/storage';
 import allReducers from './reducer';
-import { HANDLE_TO_LOGOUT } from '../pages/Login/store/constants';
+import { HANDLE_LOGOUT } from '../pages/SignIn/store/constants';
 
-export const rootReducer = (state, action) => {
+export default function(state, action) {
   let appState = state;
-  if (action.type === HANDLE_TO_LOGOUT) {
+  if (action.type === HANDLE_LOGOUT) {
     storage.removeItem('persist:sorterama');
     appState = undefined;
   }
   return allReducers(appState, action);
-};
+}
