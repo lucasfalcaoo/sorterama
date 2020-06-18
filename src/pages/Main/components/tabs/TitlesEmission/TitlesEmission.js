@@ -9,8 +9,8 @@ import Typography from '@material-ui/core/Typography';
 import Input from '../../../../../components/Input';
 import Button from '../../../../../components/Button';
 
-import { validations } from './validations';
-import { useStyles } from './styles';
+import { validations } from '../../validations';
+import { useStyles } from '../../styles';
 
 export default function TitlesEmission() {
   const classes = useStyles();
@@ -28,7 +28,7 @@ export default function TitlesEmission() {
   };
 
   return (
-    <Grid container alignItems="center" className={classes.container}>
+    <Grid container alignItems="center" className={classes.wrapper}>
       <Grid item xs={12}>
         <Grid container justify="space-between" className={classes.grid}>
           <Typography variant="subtitle2" color="textPrimary" display="inline">

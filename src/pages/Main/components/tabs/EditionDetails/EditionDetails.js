@@ -9,7 +9,7 @@ import Typography from '@material-ui/core/Typography';
 import Button from '../../../../../components/Button';
 
 import { handleLogout } from '../../../../SignIn/store/actions';
-import { useStyles } from './styles';
+import { useStyles } from '../../styles';
 
 export default function EditionDetails() {
   const classes = useStyles();
@@ -22,9 +22,9 @@ export default function EditionDetails() {
   };
 
   return (
-    <Grid container alignItems="center" className={classes.container}>
+    <Grid container alignItems="center" className={classes.wrapper}>
       <Grid item xs={12}>
-        <Grid className={classes.grid}>
+        <Grid className={classes.divider}>
           <Typography
             gutterBottom
             variant="subtitle2"
@@ -44,7 +44,7 @@ export default function EditionDetails() {
             Ativo
           </Alert>
         </Grid>
-        <Grid className={classes.grid}>
+        <Grid className={classes.divider}>
           <Typography
             gutterBottom
             variant="subtitle2"
@@ -70,7 +70,7 @@ export default function EditionDetails() {
             Edição 3 - Giro da sorte (07/06/2020 11:00)
           </Typography>
         </Grid>
-        <Grid className={classes.grid}>
+        <Grid className={classes.divider}>
           <Typography
             gutterBottom
             variant="subtitle2"
