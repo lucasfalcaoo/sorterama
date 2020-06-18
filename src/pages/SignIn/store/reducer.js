@@ -1,7 +1,7 @@
 import { SET_TOKEN, HANDLE_LOADING, HANDLE_LOGOUT } from './constants';
 
 const defaultState = {
-  isLoading: false,
+  loading: false,
   token: null,
 };
 
@@ -16,7 +16,7 @@ export default (state = defaultState, action) => {
     case HANDLE_LOADING: {
       return {
         ...state,
-        isLoading: action.payload.status,
+        loading: action.payload.status,
       };
     }
     case HANDLE_LOGOUT: {

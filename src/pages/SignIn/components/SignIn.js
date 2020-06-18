@@ -1,4 +1,5 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 
 import { Formik, Form } from 'formik';
@@ -16,6 +17,7 @@ const logo = require('../../../assets/logo.png');
 export default function SignIn() {
   const classes = useStyles();
   const history = useHistory();
+  const { loading } = useSelector(state => state.auth);
   const initialValues = { phone: '', pin: '' };
 
   const handleSignIn = values => {
@@ -67,7 +69,7 @@ export default function SignIn() {
                 helperText={touched.pin && errors.pin}
                 onChange={handleChange}
               />
-              <Button variant="contained" color="primary">
+              <Button variant="contained" color="primary" loading={loading}>
                 Entrar
               </Button>
             </Form>
@@ -77,7 +79,13 @@ export default function SignIn() {
           <Typography variant="subtitle2" color="textSecondary">
             Esqueceu o seu PIN?
           </Typography>
-          <Button dense smallWidth variant="text" color="primary">
+          <Button
+            dense
+            smallWidth
+            variant="text"
+            color="primary"
+            loading={loading}
+          >
             Solicitar novo PIN
           </Button>
         </Grid>
