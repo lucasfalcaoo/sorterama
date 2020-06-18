@@ -5,4 +5,10 @@ export const useStyles = makeStyles(({ spacing }) => ({
     padding: spacing(2),
     backgroundColor: '#FFFFFF',
   },
+  grid: {
+    marginBottom: spacing(5),
+  },
+  typography: {
+    textTransform: 'uppercase',
+  },
 }));

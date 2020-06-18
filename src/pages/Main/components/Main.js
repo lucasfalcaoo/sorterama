@@ -8,15 +8,16 @@ import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import Button from '../../../components/Button';
 
 import EditionDetails from './tabs/EditionDetails';
+import TitlesEmission from './tabs/TitlesEmission';
 
 import { useStyles } from './styles';
 
 export default function Main() {
   const classes = useStyles();
-  const [openTab, setOpenTab] = useState(0);
+  const [openTab, setOpenTab] = useState(1);
   const tabs = [
     { label: 'Detalhes da edição', component: EditionDetails },
-    { label: 'Emissão de títulos', component: EditionDetails },
+    { label: 'Emissão de títulos', component: TitlesEmission },
     { label: 'Títulos emitidos nesta edição', component: EditionDetails },
   ];
 
