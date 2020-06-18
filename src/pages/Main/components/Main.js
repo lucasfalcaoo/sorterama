@@ -15,7 +15,7 @@ import { useStyles } from './styles';
 
 export default function Main() {
   const classes = useStyles();
-  const [openTab, setOpenTab] = useState(2);
+  const [openTab, setOpenTab] = useState(1);
   const tabs = [
     { label: 'Detalhes da edição', component: EditionDetails },
     { label: 'Emissão de títulos', component: TitlesEmission },
