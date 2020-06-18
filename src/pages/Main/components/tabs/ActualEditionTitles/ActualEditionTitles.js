@@ -18,6 +18,7 @@ import IconButton from '@material-ui/core/IconButton';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import Search from '@material-ui/icons/Search';
 
+import Button from '../../../../../components/Button';
 import SalesItem from './SalesItem';
 
 import { useStyles } from '../../styles';
@@ -170,11 +171,18 @@ export default function ActualEditionTitles() {
           </Typography>
         </Grid>
 
-        <Grid item xs={12}>
-          <Typography variant="subtitle2" color="textPrimary" align="center">
-            Você pode enviar um relatório completo de vendas para o seu e-mail,
-            clicando aqui
+        <Grid container justify="center">
+          <Typography
+            paragraph
+            variant="subtitle2"
+            color="textPrimary"
+            align="center"
+          >
+            Você pode enviar um relatório completo de vendas para o seu e-mail
           </Typography>
+          <Button dense smallWidth color="secondary" size="small">
+            Enviar relatório
+          </Button>
         </Grid>
       </Grid>
     </Grid>
