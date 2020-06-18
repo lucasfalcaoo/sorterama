@@ -71,4 +71,7 @@ export const useStyles = makeStyles(({ spacing, palette }) => ({
   footer: {
     padding: spacing(1),
   },
+  sendButton: {
+    marginTop: spacing(2),
+  },
 }));

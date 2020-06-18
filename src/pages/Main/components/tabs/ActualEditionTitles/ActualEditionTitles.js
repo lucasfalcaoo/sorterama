@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
 
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
@@ -35,10 +36,16 @@ const salesResume = [
 ];
 const teamMembers = [{ name: 'Lucas' }, { name: 'João' }, { name: 'Pedro' }];
 
-export default function ActualEditionTitles() {
+export default function ActualEditionTitles({ isOpen }) {
   const classes = useStyles();
   const [teamMember, setTeamMember] = useState('');
   const [search, setSearch] = useState('');
+
+  useEffect(() => {
+    if (isOpen) {
+      console.log('Action edition titles!');
+    }
+  }, [isOpen]);
 
   const handleTeamMember = e => {
     console.log('Handle team member to filter: ', e.target.value);
@@ -188,3 +195,7 @@ export default function ActualEditionTitles() {
     </Grid>
   );
 }
+
+ActualEditionTitles.propTypes = {
+  isOpen: PropTypes.bool.isRequired,
+};

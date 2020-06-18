@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 
@@ -11,14 +12,25 @@ import Button from '../../../../../components/Button';
 import { handleLogout } from '../../../../SignIn/store/actions';
 import { useStyles } from '../../styles';
 
-export default function EditionDetails() {
+export default function EditionDetails({ isOpen }) {
   const classes = useStyles();
   const dispatch = useDispatch();
   const history = useHistory();
+  const [editionVerification, setEditionVerification] = useState(false);
+
+  useEffect(() => {
+    if (isOpen) {
+      console.log('Edition details!');
+    }
+  }, [isOpen]);
 
   const handleUserLogout = () => {
     dispatch(handleLogout());
     history.push('/');
+  };
+
+  const handleEditionVerification = () => {
+    setEditionVerification(!editionVerification);
   };
 
   return (
@@ -36,7 +48,12 @@ export default function EditionDetails() {
           <Alert
             severity="success"
             action={
-              <Button dense variant="text" size="small">
+              <Button
+                dense
+                variant="text"
+                size="small"
+                onClick={handleEditionVerification}
+              >
                 Verificar
               </Button>
             }
@@ -114,3 +131,7 @@ export default function EditionDetails() {
     </Grid>
   );
 }
+
+EditionDetails.propTypes = {
+  isOpen: PropTypes.bool.isRequired,
+};

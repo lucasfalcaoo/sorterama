@@ -1,4 +1,6 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
+import VMasker from 'vanilla-masker';
 
 import { Formik, Form } from 'formik';
 import Grid from '@material-ui/core/Grid';
@@ -12,8 +14,9 @@ import Button from '../../../../../components/Button';
 import { validations } from '../../validations';
 import { useStyles } from '../../styles';
 
-export default function TitlesEmission() {
+export default function TitlesEmission({ isOpen }) {
   const classes = useStyles();
+  const [change, setChange] = useState(0);
   const initialValues = {
     document: '',
     phone: '',
@@ -21,6 +24,23 @@ export default function TitlesEmission() {
     name: '',
     email: '',
     titles: '',
+  };
+
+  useEffect(() => {
+    if (isOpen) {
+      console.log('Title emission!');
+    }
+  }, [isOpen]);
+
+  const handleTitlesChange = (e, handleChange) => {
+    const value = e.target.value.split('R$ ')[1].replace(/,/g, '.');
+    const amount = Number(value);
+    const calculateChange = 100;
+
+    console.log('Handle titles change: ', amount);
+
+    setChange(calculateChange);
+    handleChange(e);
   };
 
   const handleTitleEmission = values => {
@@ -118,19 +138,22 @@ export default function TitlesEmission() {
                   value={values.titles}
                   error={touched.titles && errors.titles}
                   helperText={touched.titles && errors.titles}
-                  onChange={handleChange}
+                  onChange={e => handleTitlesChange(e, handleChange)}
                 />
-                {values.titles && values.titles !== 'R$ 0,00' ? (
-                  <Alert severity="info">Devolver R$ 0,10 de troco</Alert>
+                {change > 0 ? (
+                  <Alert severity="warning">
+                    Devolver R$ {VMasker.toMoney(change)} de troco
+                  </Alert>
                 ) : null}
 
                 <Grid container justify="center">
                   <Button
                     dense
                     smallWidth
-                    variant="contained"
-                    color="secondary"
                     size="small"
+                    color="secondary"
+                    variant="contained"
+                    className={classes.sendButton}
                   >
                     Enviar pedido
                   </Button>
@@ -143,3 +166,7 @@ export default function TitlesEmission() {
     </Grid>
   );
 }
+
+TitlesEmission.propTypes = {
+  isOpen: PropTypes.bool.isRequired,
+};

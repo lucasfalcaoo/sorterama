@@ -46,7 +46,7 @@ export default function Main() {
             {label}
           </Button>
           <Collapse in={openTab === index}>
-            <Component />
+            <Component isOpen={openTab === index} />
           </Collapse>
         </Grid>
       ))}
