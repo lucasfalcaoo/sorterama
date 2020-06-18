@@ -9,16 +9,17 @@ import Button from '../../../components/Button';
 
 import EditionDetails from './tabs/EditionDetails';
 import TitlesEmission from './tabs/TitlesEmission';
+import ActualEditionTitles from './tabs/ActualEditionTitles';
 
 import { useStyles } from './styles';
 
 export default function Main() {
   const classes = useStyles();
-  const [openTab, setOpenTab] = useState(1);
+  const [openTab, setOpenTab] = useState(2);
   const tabs = [
     { label: 'Detalhes da edição', component: EditionDetails },
     { label: 'Emissão de títulos', component: TitlesEmission },
-    { label: 'Títulos emitidos nesta edição', component: EditionDetails },
+    { label: 'Títulos emitidos nesta edição', component: ActualEditionTitles },
   ];
 
   const handleChangeTab = e => {
