@@ -3,7 +3,10 @@ import Box from '@material-ui/core/Box';
 
 export const MAX_WIDTH = 576;
 const DARK_GREEN = '#2d6a55';
+const MEDIUM_GREEN = '#2f7d32';
 const LIGHT_GREEN = '#8faea9';
+const BACKGROUND_GREEN = '#f4f7f4';
+const MEDIUM_GREY = '#8e8d93';
 
 export const Root = withStyles({
   root: {
@@ -25,11 +28,20 @@ export const theme = createMuiTheme({
       main: DARK_GREEN,
     },
     secondary: {
-      main: LIGHT_GREEN,
+      main: MEDIUM_GREEN,
+    },
+    textSecondary: {
+      main: BACKGROUND_GREEN,
     },
   },
   overrides: {
     MuiTypography: {
+      colorTextPrimary: {
+        color: MEDIUM_GREY,
+      },
+      colorTextSecondary: {
+        color: LIGHT_GREEN,
+      },
       subtitle2: {
         fontSize: '0.9rem',
       },
