@@ -36,7 +36,7 @@ export default function SignIn() {
           <Typography variant="h4" color="primary">
             Sistema de vendas
           </Typography>
-          <Typography paragraph variant="subtitle1" color="secondary">
+          <Typography paragraph variant="subtitle1" color="textSecondary">
             Acesse o sistema com seus dados
           </Typography>
         </Grid>
@@ -67,19 +67,14 @@ export default function SignIn() {
                 helperText={touched.pin && errors.pin}
                 onChange={handleChange}
               />
-              <Button
-                fullWidth
-                type="submit"
-                variant="contained"
-                color="primary"
-              >
+              <Button variant="contained" color="primary">
                 Entrar
               </Button>
             </Form>
           )}
         </Formik>
         <Grid container justify="center" alignItems="center">
-          <Typography variant="subtitle2" color="secondary">
+          <Typography variant="subtitle2" color="textSecondary">
             Esqueceu o seu PIN?
           </Typography>
           <Button dense smallWidth variant="text" color="primary">
