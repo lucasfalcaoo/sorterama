@@ -1,4 +1,6 @@
 import React from 'react';
+import { useDispatch } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 
 import Grid from '@material-ui/core/Grid';
 import Alert from '@material-ui/lab/Alert';
@@ -6,10 +8,18 @@ import Typography from '@material-ui/core/Typography';
 
 import Button from '../../../../../components/Button';
 
+import { handleLogout } from '../../../../SignIn/store/actions';
 import { useStyles } from './styles';
 
 export default function EditionDetails() {
   const classes = useStyles();
+  const dispatch = useDispatch();
+  const history = useHistory();
+
+  const handleUserLogout = () => {
+    dispatch(handleLogout());
+    history.push('/');
+  };
 
   return (
     <Grid container alignItems="center" className={classes.container}>
@@ -94,10 +104,9 @@ export default function EditionDetails() {
       <Grid container justify="center">
         <Button
           smallWidth
-          type="submit"
-          variant="contained"
           color="secondary"
           size="small"
+          onClick={handleUserLogout}
         >
           Sair do sistema
         </Button>
