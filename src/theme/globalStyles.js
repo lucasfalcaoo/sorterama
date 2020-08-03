@@ -30,6 +30,21 @@ export const theme = createMuiTheme({
     secondary: {
       main: MEDIUM_GREEN,
     },
+    success: {
+      main: '#1b5e20',
+      light: '#dff0d8',
+    },
+    warning: {
+      main: '#ffb74d',
+      light: '#fcf8e3',
+    },
+    error: {
+      main: '#c62828',
+      light: '#f2dede',
+    },
+    textPrimary: {
+      main: MEDIUM_GREY,
+    },
     textSecondary: {
       main: BACKGROUND_GREEN,
     },

@@ -3,6 +3,7 @@ import { SET_TOKEN, HANDLE_LOADING, HANDLE_LOGOUT } from './constants';
 const defaultState = {
   loading: false,
   token: null,
+  status: 'success',
 };
 
 export default (state = defaultState, action) => {

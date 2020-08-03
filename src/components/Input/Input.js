@@ -16,9 +16,10 @@ export default function Input({
   required,
   endLabel,
   onChange,
+  error,
   ...props
 }) {
-  const classes = useStyles(dense);
+  const classes = useStyles({ dense, error });
   const [showPassword, setPasswordVisibility] = useState(false);
 
   const handleMaskChange = e => {
@@ -64,10 +65,15 @@ export default function Input({
       autoComplete="new-password"
       type={type === 'password' && !showPassword ? 'password' : 'text' || type}
       className={classes.root}
+      error={error}
       onChange={e => handleMaskChange(e)}
       InputLabelProps={{ shrink: true }}
       InputProps={{
+        className: classes.input,
         endAdornment: renderEndAdornment(),
+      }}
+      FormHelperTextProps={{
+        className: classes.helperText,
       }}
     />
   );
@@ -86,4 +92,5 @@ Input.propTypes = {
   dense: PropTypes.bool,
   endLabel: PropTypes.string,
   required: PropTypes.bool,
+  error: PropTypes.shape().isRequired,
 };

@@ -1,0 +1,22 @@
+image: node:10-alpine
+pipelines: 
+  # default:
+  #   - step:        
+  #       script: # Modify the commands below to build your repository.
+  #         - npm install
+  #         - npm run build
+  tags:
+    v*:
+      - step:          
+         script:
+        # build the image          
+          - docker build -t sorterama-frontend .
+
+        # use the pipe to push the image to AWS ECR
+          - pipe: atlassian/aws-ecr-push-image:1.1.2
+            variables:
+             AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
+             AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
+             AWS_DEFAULT_REGION: $AWS_DEFAULT_REGION
+             IMAGE_NAME: sorterama-frontend
+             TAGS: $BITBUCKET_TAG

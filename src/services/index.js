@@ -1,30 +1,46 @@
 import axios from 'axios';
-// import { toast } from 'react-toastify';
+import { store } from '../store';
+import { setMessage } from '../components/Dialog/store/actions';
 
 const baseAPI = process.env.REACT_APP_BASE_API;
 
 export const api = axios.create({
   baseURL: baseAPI,
-  timeout: 10000,
+  timeout: 30000,
   headers: {
-    'Content-Type': 'application/x-www-form-urlencoded',
-    clientSide: 'web',
+    'Content-Type': 'application/json',
   },
 });
 
 export const setAPI = () => {
   api.interceptors.response.use(null, error => {
-    console.log('Axios - error status: ', error.response);
-
     if (error.response) {
       if (error.response.status === 500) {
-        console.log(
-          'Aconteceu algo inesperado. Entre em contato com o suporte.'
+        store.dispatch(
+          setMessage({
+            title: 'Problemas no servidor',
+            message:
+              'Estamos com problemas no servidor, tente novamente mais tarde',
+            severity: 'error',
+          })
         );
       } else if (error.response.status === 400) {
-        console.log(error.response.data.data.msg);
+        store.dispatch(
+          setMessage({
+            title: 'Ops!',
+            message: `${error.response.data}`,
+            severity: 'error',
+          })
+        );
       } else {
-        console.log('Estamos tendo problemas, tente novamente em breve.');
+        store.dispatch(
+          setMessage({
+            title: 'Problemas no servidor',
+            message:
+              'Estamos com problemas no servidor, caso o problema persista entre em contato com o suporte',
+            severity: 'error',
+          })
+        );
       }
     }
 

@@ -1,26 +1,98 @@
-import { SET_TOKEN, HANDLE_LOADING, HANDLE_LOGOUT } from './constants';
+import {
+  SET_DRAW,
+  SET_USER,
+  SET_SALESPEOPLE,
+  SET_DASHBOARD,
+  SET_CLIENT_SEARCH,
+  HANDLE_SEARCH_LOADING,
+  HANDLE_LOADING,
+} from './constants';
 
 const defaultState = {
-  isLoading: false,
-  token: null,
+  loading: false,
+  salespeople: [],
+  search: {
+    cpf: '',
+    totalTitulos: '',
+    searchLoading: false,
+  },
+  usuario: {
+    id: null,
+    nome: '',
+    login: '',
+    email: '',
+    perfil: '',
+    idLoja: null,
+    ativo: false,
+  },
+  sorteio: {
+    id: null,
+    nome: '',
+    descricao: '',
+    status: '',
+    dtSorteio: '',
+    dtInicioEdicao: '',
+    dtFimEdicao: '',
+    vlTitulo: 0,
+    vlMinimoCompra: 0,
+    vlMaximoCompra: 0,
+    numTituloDe: 0,
+    numTituloAte: 0,
+  },
+  dashboard: {
+    edicao: { nome: '', valorVendedor: 0, titulos: 0 },
+    edicaoDiaria: { nome: '', valorVendedor: 0, titulos: 0 },
+    diariaVendedor: { nome: '', valorVendedor: 0, titulos: 0 },
+    edicaoVendedor: { nome: '', valorVendedor: 0, titulos: 0 },
+  },
 };
 
 export default (state = defaultState, action) => {
   switch (action.type) {
-    case SET_TOKEN: {
+    case SET_DRAW: {
       return {
         ...state,
-        token: action.payload.token,
+        sorteio: action.payload.data,
+      };
+    }
+    case SET_USER: {
+      return {
+        ...state,
+        usuario: action.payload.data,
+      };
+    }
+    case SET_SALESPEOPLE: {
+      return {
+        ...state,
+        salespeople: action.payload.data,
+      };
+    }
+    case SET_DASHBOARD: {
+      return {
+        ...state,
+        dashboard: action.payload.data,
+      };
+    }
+    case SET_CLIENT_SEARCH: {
+      return {
+        ...state,
+        search: action.payload.data,
+      };
+    }
+    case HANDLE_SEARCH_LOADING: {
+      return {
+        ...state,
+        search: {
+          ...state.search,
+          searchLoading: action.payload.status,
+        },
       };
     }
     case HANDLE_LOADING: {
       return {
         ...state,
-        isLoading: action.payload.status,
+        loading: action.payload.status,
       };
-    }
-    case HANDLE_LOGOUT: {
-      return defaultState;
     }
     default:
       return state;

@@ -1,122 +1,240 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import VMasker from 'vanilla-masker';
+import { useDispatch, useSelector } from 'react-redux';
+
+import over from 'ramda/src/over';
+import lensProp from 'ramda/src/lensProp';
 
 import { Formik, Form } from 'formik';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
-import Alert from '@material-ui/lab/Alert';
 import Typography from '@material-ui/core/Typography';
 
 import Input from '../../../../../components/Input';
 import Button from '../../../../../components/Button';
 
+import { buyTitle, checkBuyer } from '../../../store/thunk';
+import { clearMessage } from '../../../../../components/Dialog/store/actions';
+import {
+  formatCurrency,
+  formatCurrencyToDB,
+  formatDateToDB,
+} from '../../../../../utils/formatters';
+import { validateDocument } from '../../../../../utils/validations';
 import { validations } from '../../validations';
 import { useStyles } from '../../styles';
 
 export default function TitlesEmission({ isOpen }) {
   const classes = useStyles();
+  const dispatch = useDispatch();
+  const { loading } = useSelector(state => state.main);
+  const { vlTitulo, vlMinimoCompra, vlMaximoCompra } = useSelector(
+    state => state.main.sorteio
+  );
   const [change, setChange] = useState(0);
+  const [titlesAmount, setTitlesAmount] = useState(0);
+  const [freshInitialValues, refreshInitialValues] = useState(null);
   const initialValues = {
-    document: '',
-    phone: '',
-    birthday: '',
-    name: '',
+    cpf: '',
+    celular: '',
+    dtNascimento: '',
+    nome: '',
     email: '',
-    titles: '',
+    valor: 0,
   };
 
   useEffect(() => {
-    if (isOpen) {
-      console.log('Title emission!');
-    }
+    dispatch(clearMessage());
   }, [isOpen]);
 
-  const handleTitlesChange = (e, handleChange) => {
-    const value = e.target.value.split('R$ ')[1].replace(/,/g, '.');
-    const amount = Number(value);
-    const calculateChange = 100;
+  const handleAmountChange = (e, handleChange) => {
+    const amount = formatCurrencyToDB(e.target.value);
+    const calculateTitlesAmount = parseInt(amount / vlTitulo, 10);
+    const calculateChange = amount - calculateTitlesAmount * vlTitulo;
+    const formatChange = Number(calculateChange.toFixed(2));
 
-    console.log('Handle titles change: ', amount);
+    if (amount > vlTitulo) {
+      setChange(formatChange);
+    } else {
+      setChange(0);
+    }
 
-    setChange(calculateChange);
+    e.target.value = amount;
+
+    setTitlesAmount(calculateTitlesAmount);
     handleChange(e);
   };
 
-  const handleTitleEmission = values => {
-    console.log('Handle title emission values: ', values);
+  const handleDocumentChange = (
+    e,
+    handleChange,
+    setFieldError,
+    setFieldTouched
+  ) => {
+    const { value } = e.target;
+    const docValue = value.replace(/\D/g, '');
+    const params = { userDocument: value };
+
+    if (value.length === 14 && validateDocument(docValue)) {
+      dispatch(checkBuyer(params)).then(values => {
+        refreshInitialValues(values);
+      });
+    } else {
+      refreshInitialValues(initialValues);
+      setFieldTouched('cpf', true, true);
+    }
+
+    return handleChange(e);
+  };
+
+  const handleDateChange = (e, handleChange, setFieldTouched) => {
+    const { value } = e.target;
+
+    if (value.length === 10) {
+      setFieldTouched('dtNascimento', true, true);
+    }
+
+    return handleChange(e);
+  };
+
+  const handleTitleEmission = (values, formikBag) => {
+    const { resetForm } = formikBag;
+    const params = over(lensProp('dtNascimento'), formatDateToDB, values);
+
+    return dispatch(buyTitle(params)).then(() => {
+      resetForm({ values: initialValues });
+    });
   };
 
   return (
-    <Grid container alignItems="center" className={classes.wrapper}>
+    <Grid item xs={12}>
       <Grid item xs={12}>
-        <Grid container justify="space-between" className={classes.grid}>
-          <Typography variant="subtitle2" color="textPrimary" display="inline">
-            Valor do título
-          </Typography>
-          <Typography variant="subtitle2" color="textPrimary" display="inline">
-            R$ 0,25 centavos
-          </Typography>
-        </Grid>
-        <Grid container justify="space-between" className={classes.grid}>
-          <Typography variant="subtitle2" color="textPrimary" display="inline">
-            Venda mínima
-          </Typography>
-          <Typography variant="subtitle2" color="textPrimary" display="inline">
-            R$ 1,00 real
-          </Typography>
-        </Grid>
         <Paper variant="outlined" className={classes.paper}>
+          <Grid container direction="row" justify="space-between">
+            <Grid item xs={4}>
+              <Grid container direction="column">
+                <Typography
+                  variant="subtitle2"
+                  color="textPrimary"
+                  display="inline"
+                >
+                  Título
+                </Typography>
+                <Typography
+                  variant="subtitle1"
+                  color="textPrimary"
+                  className={classes.title}
+                >
+                  {formatCurrency(vlTitulo)}
+                </Typography>
+              </Grid>
+            </Grid>
+            <Grid item xs={4}>
+              <Grid container direction="column">
+                <Typography
+                  variant="subtitle2"
+                  color="textPrimary"
+                  display="inline"
+                >
+                  Mínimo
+                </Typography>
+                <Typography
+                  variant="subtitle1"
+                  color="textPrimary"
+                  className={classes.title}
+                >
+                  {formatCurrency(vlMinimoCompra)}
+                </Typography>
+              </Grid>
+            </Grid>
+            <Grid item xs={4}>
+              <Grid container direction="column">
+                <Typography
+                  variant="subtitle2"
+                  color="textPrimary"
+                  display="inline"
+                >
+                  Máximo
+                </Typography>
+                <Typography
+                  variant="subtitle1"
+                  color="textPrimary"
+                  className={classes.title}
+                >
+                  {formatCurrency(vlMaximoCompra)}
+                </Typography>
+              </Grid>
+            </Grid>
+          </Grid>
+        </Paper>
+        <Grid item xs={12} className={classes.form}>
           <Formik
-            initialValues={initialValues}
-            validationSchema={validations}
+            enableReinitialize
+            initialValues={freshInitialValues || initialValues}
+            validationSchema={validations(vlMinimoCompra, vlMaximoCompra)}
             onSubmit={handleTitleEmission}
           >
-            {({ values, errors, touched, handleChange }) => (
+            {({
+              values,
+              errors,
+              touched,
+              handleChange,
+              setFieldError,
+              setFieldTouched,
+            }) => (
               <Form>
                 <Input
                   dense
                   required
-                  id="document"
+                  id="cpf"
                   type="document"
                   endLabel="CPF"
                   placeholder="000.000.000-00"
-                  value={values.document}
-                  error={touched.document && errors.document}
-                  helperText={touched.document && errors.document}
-                  onChange={handleChange}
+                  value={values.cpf}
+                  error={touched.cpf && errors.cpf}
+                  helperText={touched.cpf && errors.cpf}
+                  onChange={e =>
+                    handleDocumentChange(
+                      e,
+                      handleChange,
+                      setFieldError,
+                      setFieldTouched
+                    )
+                  }
                 />
                 <Input
                   dense
                   required
-                  id="phone"
+                  id="celular"
                   type="phone"
                   endLabel="Celular"
                   placeholder="(00) 00000-0000"
-                  value={values.phone}
-                  error={touched.phone && errors.phone}
-                  helperText={touched.phone && errors.phone}
+                  value={values.celular}
+                  error={touched.celular && errors.celular}
+                  helperText={touched.celular && errors.celular}
                   onChange={handleChange}
                 />
                 <Input
                   dense
                   required
-                  id="birthday"
+                  id="dtNascimento"
                   type="date"
                   endLabel="Data de nascimento"
                   placeholder="00/00/0000"
-                  value={values.birthday}
-                  error={touched.birthday && errors.birthday}
-                  helperText={touched.birthday && errors.birthday}
-                  onChange={handleChange}
+                  value={values.dtNascimento}
+                  error={touched.dtNascimento && errors.dtNascimento}
+                  helperText={touched.dtNascimento && errors.dtNascimento}
+                  onChange={e =>
+                    handleDateChange(e, handleChange, setFieldTouched)
+                  }
                 />
                 <Input
                   dense
-                  id="name"
+                  id="nome"
                   endLabel="Nome"
-                  value={values.name}
-                  error={touched.name && errors.name}
-                  helperText={touched.name && errors.name}
+                  value={values.nome}
+                  error={touched.nome && errors.nome}
+                  helperText={touched.nome && errors.nome}
                   onChange={handleChange}
                 />
                 <Input
@@ -131,20 +249,19 @@ export default function TitlesEmission({ isOpen }) {
                 />
                 <Input
                   dense
-                  id="titles"
+                  id="valor"
                   type="money"
-                  endLabel="00 Títulos"
+                  endLabel={`${titlesAmount} Títulos`}
                   placeholder="R$ 0,00"
-                  value={values.titles}
-                  error={touched.titles && errors.titles}
-                  helperText={touched.titles && errors.titles}
-                  onChange={e => handleTitlesChange(e, handleChange)}
+                  value={formatCurrency(values.valor)}
+                  error={touched.valor && errors.valor}
+                  helperText={
+                    change > 0
+                      ? `Devolver ${formatCurrency(change)} de troco`
+                      : touched.valor && errors.valor
+                  }
+                  onChange={e => handleAmountChange(e, handleChange)}
                 />
-                {change > 0 ? (
-                  <Alert severity="warning">
-                    Devolver R$ {VMasker.toMoney(change)} de troco
-                  </Alert>
-                ) : null}
 
                 <Grid container justify="center">
                   <Button
@@ -153,6 +270,7 @@ export default function TitlesEmission({ isOpen }) {
                     size="small"
                     color="secondary"
                     variant="contained"
+                    loading={loading}
                     className={classes.sendButton}
                   >
                     Enviar pedido
@@ -161,7 +279,7 @@ export default function TitlesEmission({ isOpen }) {
               </Form>
             )}
           </Formik>
-        </Paper>
+        </Grid>
       </Grid>
     </Grid>
   );

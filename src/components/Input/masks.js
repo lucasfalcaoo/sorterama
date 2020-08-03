@@ -1,5 +1,7 @@
 import VMasker from 'vanilla-masker';
 
+import { formatPhone, formatDocument } from '../../utils/formatters';
+
 export const convertToMask = (type, value) => {
   switch (type) {
     case 'money': {
@@ -9,18 +11,10 @@ export const convertToMask = (type, value) => {
       return VMasker.toPattern(value, '99/99/9999');
     }
     case 'phone': {
-      let phonePattern = '(99) 9999-9999';
-      const phone = value.replace(/[^0-9.]+/g, '');
-
-      if (phone.length > 10) {
-        phonePattern = '(99) 99999-9999';
-      }
-      return VMasker.toPattern(value || '', phonePattern);
+      return formatPhone(value);
     }
     case 'document': {
-      const documentPattern = '999.999.999-99';
-
-      return VMasker.toPattern(value, documentPattern);
+      return formatDocument(value);
     }
     default: {
       return value;
